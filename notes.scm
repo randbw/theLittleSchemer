@@ -193,3 +193,47 @@
 	    (tup+ (cdr tup1) (cdr tup2)))))))
 
 ;; deals with tups of any size
+
+(define >
+  (lambda (n m)
+    (cond
+     ((zero? n) #f)
+     ((zero? m) #t)
+     (else
+      (> (sub1 n) (sub1 m))))))
+
+(define <
+  (lambda (n m)
+    (cond
+     ((zero? m) #f)
+     ((zero? n) #t)
+     (else
+      (< (sub1 n) (sub1 m))))))
+
+(define =
+  (lambda (n m)
+    (cond
+     ((zero? m) (zero? n))
+     ((zero? n) #f)
+     (else (= (sub1 n) (sub1 m))))))
+
+;; rewrite above using < and >
+(define =
+  (lambda (n m)
+    (cond
+     ((> n m) #f)
+     ((< n m) #f)
+     (else #t))))
+
+(define exp
+  (lambda (n m)
+    (cond
+     ((= 0 m) 1)
+     (else
+      (x n (exp n (sub1 m)))))))
+
+(define /
+  (lambda (n m)
+    (cond
+     ((< n m) 0)
+     (else (add1 (/ (- n m) m))))))
