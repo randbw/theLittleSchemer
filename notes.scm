@@ -303,3 +303,32 @@
        (else
 	(occur a (cdr lat))))))))
 
+(define one?
+  (lambda (n)
+    (cond
+     ((= n 1) #t)
+     (else #f))))
+
+;; TLS suggests the following 2 ways:
+(define one?
+  (lambda (n)
+    (cond
+     ((zero? n) #f)
+     (else (zero? (sub1 n))))))
+
+(define one?
+  (lambda (n)
+    (cond
+     (else (= n 1)))))
+
+(define one?
+  (lambda (n)
+    (= n 1)))
+
+(define rempick
+  (lambda (n lat)
+    (cond
+     ((one? n) (cdr lat))
+     (else
+      (cons (car lat)
+	    (rempick (sub1 n) (cdr lat)))))))
