@@ -437,3 +437,80 @@
      ((atom? (car l)) (car l))
      (else
       (leftmost (car l))))))
+
+;; "and" goes through list of predicates checking if they are all true. if one
+;; is false it stops and returns false otherwise if it gets to end it returns true
+
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+     ((null? l1)
+      (cond
+       ((null? l2) #t)
+       (else #f)))
+     ((atom? (car l1))
+      (cond
+       ((atom? (car l2))
+	(cond
+	 ((eqan? (car l1) (car l2))
+	  (eqlist? (cdr l1) (cdr l2)))
+	 (else #f)))))
+     (else
+      (cond
+       ((atom? (car l2)) #f)
+       ((null? l2) #f)
+       (else
+	(and
+	 (eqlist? (car l1) (car l2))
+	 (eqlist? (cdr l1) (cdr l2)))))))))
+
+;; book solution
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+     ((and (null? l1) (null? l2)) #t)
+     ((and (null? l1) (atom? (car l2))) #f)
+     ((null? l1) #f)
+     ((and (atom? (car l1)) (null? l2)) #f)
+     ((and (atom? (car l1)) (atom? (car l2)))
+      (and (eqan? (car l1) (car l2))
+	   (eqlist? (cdr l1) (cdr l2))))
+     ((atom? (car l1)) #f)
+     ((null? l2) #f)
+     ((atom? (car l2)) #f)
+     (else
+      (and (eqlist? (car l1) (car l2))
+	   (eqlist? (cdr l1) (cdr l2)))))))
+
+;; rewrite
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+     ((and (null? l1) (null? l2)) #t)
+     ((or (null? l1) (null? l2)) #f)
+     ((and (atom? (car l1)) (atom? (car l2)))
+      (and (eqan? (car l1) (car l2))
+	   (eqlist? (cdr l1) (cdr l2))))
+     ((or (atom? (car l1)) (atom? (car l2))) #f)
+     (else
+      (and (eqlist? (car l1) (car l2))
+	   (eqlist? (cdr l1) (cdr l2)))))))
+
+(define equal?
+  (lambda (s1 s2)
+    (cond
+     ((and (atom? s1) (atom? s2))
+      (eqan? s1 s2))
+     ((or (atom? s1) (atom? s2)) #f)
+     (else
+      (eqlist? s1 s2)))))
+
+;; rewrite eqlist? using equal?
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+     ((and (null? l1) (null? l2)) #t)
+     ((or (null? l1) (null? l2) #f))
+     (else
+      (and (equal? (car l1) (car l2))
+	   (eqlist? (cdr l1) (cdr l2)))))))
