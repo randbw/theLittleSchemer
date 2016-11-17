@@ -514,3 +514,50 @@
      (else
       (and (equal? (car l1) (car l2))
 	   (eqlist? (cdr l1) (cdr l2)))))))
+
+;; simplify
+(define rember
+  (lambda (s l)
+    (cond
+     ((null? l) (quote()))
+     ((atom? car l)
+      (cond
+       ((equal? (car l) s) (cdr l))
+       (else
+	(cons (car l)
+	      (rember s (cdr l))))))
+     (else (cond
+	    ((equal? (car l) s) (cdr l))
+	    (else
+	     (cons (car l)
+		   (rember s (cdr l)))))))))
+
+(define rember
+  (lambda (s l)
+    (cond
+     ((null? l) (quote()))
+     ((equal? (car l) s) (cdr l))
+     (else
+      (cons (car l) (rember s (cdr l)))))))
+
+;; simplify
+(define insertL*
+  (lambda (new old l)
+    (cond
+     ((null? l) (quote()))
+     ((atom? (car l))
+      (cond
+       ((eq? (car l) old)
+	(cons new
+	      (cons old
+		    (insertL* new old (cdr l)))))
+       (else
+	(cons (car l)
+	      (insertL* new old (cdr l))))))
+     (else
+      (cons
+       (insertL* new old (car l))
+       (insertL* new old (cdr l)))))))
+
+;; trick question; you cannot as you must know whether or not (car l) is an atom
+;; before you ask (eq? (car l) old)
