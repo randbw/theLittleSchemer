@@ -583,3 +583,68 @@
       (and
        (number? (car aexp))
        (number? (car (cdr (cdr aexp)))))))))
+
+;; value for representations with operator in middle, i.e. (1 + 3)
+(define value
+  (lambda (nexp)
+    (cond
+     ((and (atom? nexp) (number? nexp)) nexp)
+     ((eq? (car (cdr aexp)) (quote +))
+      (+ (value (car nexp))
+	 (value (car (cdr (cdr nexp))))))
+     ((eq? (car (cdr aexp)) (quote *))
+      (* (value (car nexp))
+	 (value (car (cdr (cdr nexp))))))
+     (else
+      (^ (value (car nexp))
+	 (value (car (cdr (cdr nexp)))))))))
+
+;; value for (+ 1 3)
+(define value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     ((eq? (car nexp) (quote +))
+      (+ (value (car (cdr nexp)))
+	 (value (car (cdr (cdr nexp))))))
+     ((eq? (car nexp) (quote *))
+      (* (value (car (cdr nexp)))
+	 (value (car (cdr (cdr nexp))))))
+     (else
+      (eq? (car nexp) (quote ^))
+      (^ (value (car (cdr nexp)))
+	 (value (car (cdr (cdr nexp)))))))))
+
+(define 1st-sub-exp
+  (lambda (aexp)
+    (car (cdr aexp))))
+
+(define 2nd-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr aexp)))))
+
+(define operator
+  (lambda (nexp)
+    (car nexp)))
+
+(define value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     ((eq? (operator nexp) (quote +))
+      (+ (value (1st-sub-exp nexp))
+	 (value (2nd-sub-exp nexp))))
+     ((eq? (operator nexp) (quote *))
+      (* (value (1st-sub-exp nexp))
+	 (value (2nd-sub-exp nexp))))
+     (else
+      (^ (value (1st-sub-exp nexp))
+	 (value (2nd-sub-exp nexp)))))))
+
+;; rewriting 1st-sub-exp and operator for (1 + 3) arithmetic expressions
+(define 1st-sub-exp
+  (lambda (aexp)
+    (car aexp)))
+(define operator
+  (lambda (aexp)
+    (car (cdr aexp))))
