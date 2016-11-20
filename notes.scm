@@ -561,3 +561,25 @@
 
 ;; trick question; you cannot as you must know whether or not (car l) is an atom
 ;; before you ask (eq? (car l) old)
+
+(define numbered?
+  (lambda (aexp)
+    (cond
+     ((atom? aexp) (number? aexp))
+     ((eq? (car (cdr aexp)) (quote +))
+      (and (number? aexp) (number? (car (cdr (cdr aexp))))))
+     ((eq? (car (cdr aexp)) (quote *))
+      (and (number? aexp) (number? (car (cdr (cdr aexp))))))
+     ((eq? (car (cdr aexp)) (quote ^))
+      (and (number? aexp) (number? (car (cdr (cdr aexp))))))
+     (else rekt))))
+
+;; simplify
+(define numbered?
+  (lambda (aexp)
+    (cond
+     ((atom? aexp) (number? aexp))
+     (else
+      (and
+       (number? (car aexp))
+       (number? (car (cdr (cdr aexp)))))))))
