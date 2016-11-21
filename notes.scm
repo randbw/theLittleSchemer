@@ -648,3 +648,35 @@
 (define operator
   (lambda (aexp)
     (car (cdr aexp))))
+
+(define zero-test
+  (lambda (n)
+    (null? n)))
+
+(define add-one
+  (lambda (n)
+    (cons (quote ()) n)))
+
+(define sub-one
+  (lambda (n)
+    (cdr n)))
+
+(define +
+  (lambda (n m)
+    (cond
+     ((zero? m) n)
+     (else
+      (+ (add-one n) (sub-one m))))))
+;; book has below
+(define +
+  (lambda (n m)
+    (cond
+     ((zero? m) n)
+     (else
+      (add-one (+ n (sub-one m)))))))
+
+(define lat?
+  (lambda (l)
+    ((null? l) #t)
+    ((atom? (car l)) (lat? (cdr l)))
+    (else #f)))
