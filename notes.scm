@@ -667,6 +667,7 @@
      ((zero? m) n)
      (else
       (+ (add-one n) (sub-one m))))))
+
 ;; book has below
 (define +
   (lambda (n m)
@@ -680,3 +681,33 @@
     ((null? l) #t)
     ((atom? (car l)) (lat? (cdr l)))
     (else #f)))
+
+;; Chapter 7 <- beginning of me marking chapters.
+(define set?
+  (lambda (lat)
+    (cond
+     ((null? lat) #t)
+     ((member? (car lat) (cdr lat)) #f)
+     (else
+      (set? (cdr lat))))))
+
+(define makeset
+  (lambda (lat)
+    (cond
+     ((null? lat) (quote ()))
+     ((member? (car lat) (cdr lat))
+      (cons (car lat) (makeset (rember (car lat) (cdr lat)))))
+     (else
+      (cons (car lat) (makeset (cdr lat)))))))
+
+;; book has different form of method which returns different result
+(define makeset
+  (lambda (lat)
+    (cond
+     ((null? lat) (quote ()))
+     ((member? (car lat) (cdr lat))
+      (makeset (cdr lat)))
+     (else
+      (cons (car lat) (makeset (cdr lat)))))))
+
+;; write makeset with multirember
