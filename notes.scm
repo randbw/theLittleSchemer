@@ -682,7 +682,7 @@
     ((atom? (car l)) (lat? (cdr l)))
     (else #f)))
 
-;; Chapter 7 <- beginning of me marking chapters.
+;; Chapter 7 - Sets <- beginning of me marking chapters.
 (define set?
   (lambda (lat)
     (cond
@@ -728,5 +728,44 @@
      (else
       (cons (car lat)
 	    (makeset (multirember (car lat) (cdr lat))))))))
+
+(define subset?
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) #t)
+     ((member? (car set1) set2)
+      (subset? (cdr set1) set2))
+     (else #f))))
+
+;; subset? with (and ...)
+(define subset?
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) #t)
+     (else
+      (and (member? (car set1) set2)
+	   (subset? (cdr set1) set2))))))
+
+(define eqset?
+  (lambda (set1 set2)
+    (and (subset? set1 set2) (subset? set2 set1))))
+
+(define intersect?
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) #f)
+     ((member? (car set1) set2) #t)
+     (else
+      (intersect? (cdr set1) set2)))))
+
+;; with or
+(define intersect?
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) #f)
+     (else
+      (or
+       (member? (car set1) set2)
+       (intersect? (cdr set1) set2))))))
 
 
