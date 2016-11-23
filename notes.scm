@@ -700,7 +700,7 @@
      (else
       (cons (car lat) (makeset (cdr lat)))))))
 
-;; book has different form of method which returns different result
+;; book has different form of method which returns different result to one they gave
 (define makeset
   (lambda (lat)
     (cond
@@ -711,3 +711,22 @@
       (cons (car lat) (makeset (cdr lat)))))))
 
 ;; write makeset with multirember
+(define makeset
+  (lambda (lat)
+    (cond
+     ((null? lat) (quote ()))
+     ((member? (car lat) (cdr lat))
+      (cons (car lat) (multirember (car lat) (cdr lat))))
+     (else
+      (cons (car lat) (makeset (cdr lat)))))))
+
+;; simplified
+(define makeset
+  (lambda (lat)
+    (cond
+     ((null? lat) (quote ()))
+     (else
+      (cons (car lat)
+	    (makeset (multirember (car lat) (cdr lat))))))))
+
+
