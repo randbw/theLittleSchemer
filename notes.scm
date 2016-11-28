@@ -794,3 +794,76 @@
      (else
       (intersect (car l-set)
 		 (intersectall (cdr l-set)))))))
+
+(define a-pair
+  (lambda (l)
+    (cond
+     ((atom? l) #f)
+     ((null? l) #f)
+     ((null? (cdr l)) #f)
+     ((null? (cdr (cdr l))) #t)
+     (else #f))))
+
+(define first
+  (lambda (p)
+    (car p)))
+(define second
+  (lambda (p)
+    (car (cdr p))))
+(define build
+  (lambda (s1 s2)
+    (cons s1 (cons s2 (quote ())))))
+
+(define third
+  (lambda (l)
+    (car (cdr (cdr l)))))
+
+(define fun?
+  (lambda (rel)
+    (set? (firsts rel))))
+
+;; a finite function is a list of pairs where none of the first elements are repeated
+;; i.e. the "firsts" make a set
+
+(define revrel
+  (lambda (rel)
+    (cond
+     ((null? rel) (quote ()))
+     (else
+      (cons (build (second (car rel)) (first (car rel)))
+	    (revrel (cdr rel)))))))
+
+(define revpair
+  (lambda (pair)
+    (build (second pair) (first pair))))
+
+;; rewrite revrel using revpair
+(define revrel
+  (lambda (rel)
+    (cond
+     ((null? rel) (quote ()))
+     (else
+      (cons (revpair (car rel))
+	    (revrel (cdr rel)))))))
+
+(define fullfun?
+  (lambda (fun)
+    (and
+     (fun? fun)
+     (fun? (revrel fun)))))
+
+;; TLS has version below. doesn't take into account the firsts
+(define fullfun?
+  (lambda (fun)
+    (set? (seconds fun))))
+
+;; TLS defines seconds just like firsts
+;; I wrote my version (below) relevant to pairs
+(define seconds
+  (lambda (rel)
+    (firsts (revrel rel))))
+
+;; fullfun can be thought of as one-to-one
+(define one-to-one?
+  (lambda (fun)
+    (fun? (revrel fun))))
