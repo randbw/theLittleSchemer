@@ -867,3 +867,28 @@
 (define one-to-one?
   (lambda (fun)
     (fun? (revrel fun))))
+
+;; Chapter 8 - Lambda the Ultimate
+(define rember-f
+  (lambda (test? a l)
+    (cond
+     ((null? l) (quote ()))
+     ((test? (car l) a) (cdr l))
+     (else
+      (cons (car l)
+	    (rember-f test? a (cdr l)))))))
+
+(define curry-time ;; TLS calls this eq?-c, -c meaning curry
+  (lambda (a)
+    (lambda (x)
+      (eq? x a))))
+
+(define rember-f
+  (lambda (test?)
+    (lambda (a l)
+      (cond
+       ((null? l) (quote ()))
+       ((test? a (car l)) (cdr l))
+       (else
+	(cons (car l)
+	      ((rember-f test?) a (cdr l))))))))
