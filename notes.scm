@@ -6,7 +6,7 @@
 (define rember
   (lambda (a lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else (cond
 	    ((eq? (car lat) a) (cdr lat)
 	     (else (cons (car lat)
@@ -16,7 +16,7 @@
 (define remberSimple
   (lambda (a lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      ((eq? (car lat) a) (cdr lat))
      (else (cons (car lat)
 		 (rember a (cdr lat)))))))
@@ -26,7 +26,7 @@
 (define firsts
   (lambda (lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else (cond
 	    ((atom? (car lat)) (firsts (cdr lat)))
 	    (else (cons (car (car lat))
@@ -39,7 +39,7 @@
 (define insertR
   (lambda (new old lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else (cond
 	    ((eq? (car lat) old)
 	     (cons (car lat)
@@ -51,7 +51,7 @@
 (define insertL
   (lambda (new old lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else (cond
 	    ((eq? (car lat) old) (cons new (cons old (cdr lat))))
 	    (else
@@ -60,7 +60,7 @@
 (define subst
   (lambda (new old lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else (cond
 	    ((eq? (car lat) old)
 	     (cons new (cdr lat)))
@@ -70,7 +70,7 @@
 (define subst2
   (lambda (new o1 o2 lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else (cond
 	    ((or (eq? (car lat) o1) (eq? (car lat) o2))
 	     (cons new (cdr lat))
@@ -80,7 +80,7 @@
 (define multirember
   (lambda (a lat)
     (cond
-     (null? lat) (quote())
+     (null? lat) (quote ())
      (else
       (cond
        ((eq? a (car lat)) (multirember a (cdr lat)))
@@ -90,7 +90,7 @@
 (define multiinsertR
   (lambda (new old lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else
       (cond
        ((eq? (car lat) old)
@@ -103,7 +103,7 @@
 (define multiinsertL
   (lambda (new old lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else
       (cond
        ((eq? (car lat) old)
@@ -116,7 +116,7 @@
 (define multisubst
   (lambda (new old lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else
       ((eq? (car lat) old)
        (cons new
@@ -177,7 +177,7 @@
   (lambda (tup1 tup2)
     (cond
      ((and (null? tup1) (null? tup2))
-      (quote()))
+      (quote ()))
      (else
       (cons (+ (car tup1) (car tup2))
 	    (tup+ (cdr tup1) (cdr tup2)))))))
@@ -264,7 +264,7 @@
 (define no-nums
   (lambda (lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else
       (cond
        ((number? car lat) (no-nums (cdr lat)))
@@ -274,7 +274,7 @@
 (define all-nums
   (lambda (lat)
     (cond
-     ((null? lat) (quote()))
+     ((null? lat) (quote ()))
      (else
       (cond
        ((number? (car lat))
@@ -336,7 +336,7 @@
 (define rember*
   (lambda (a l)
     (cond
-     ((null? l) (quote()))
+     ((null? l) (quote ()))
      ((lat? (car l)) (cons (rember* a (car l)) (rember* a (cdr l))))
      (else
       (cond
@@ -348,7 +348,7 @@
 (define rember*
   (lambda (a l)
     (cond
-     ((null? l) (quote()))
+     ((null? l) (quote ()))
      ((atom? (car l))
       (cond
        ((eqan? (car l) a) (rember* a (cdr l)))
@@ -360,7 +360,7 @@
 (define insertR*
   (lambda (new old l)
     (cond
-     ((null? l) (quote()))
+     ((null? l) (quote ()))
      ((atom? (car l))
       (cond
        ((eq? old (car l))
@@ -390,7 +390,7 @@
 (define subst*
   (lambda (new old l)
     (cond
-     ((null? l) (quote()))
+     ((null? l) (quote ()))
      ((atom? (car l))
       (cond
        ((eq? old (car l))
@@ -405,7 +405,7 @@
 (define insertL*
   (lambda (new old l)
     (cond
-     ((null? l) (quote()))
+     ((null? l) (quote ()))
      ((atom? (car l))
       (cond
        ((eq? (car l) old)
@@ -519,7 +519,7 @@
 (define rember
   (lambda (s l)
     (cond
-     ((null? l) (quote()))
+     ((null? l) (quote ()))
      ((atom? car l)
       (cond
        ((equal? (car l) s) (cdr l))
@@ -535,7 +535,7 @@
 (define rember
   (lambda (s l)
     (cond
-     ((null? l) (quote()))
+     ((null? l) (quote ()))
      ((equal? (car l) s) (cdr l))
      (else
       (cons (car l) (rember s (cdr l)))))))
@@ -544,7 +544,7 @@
 (define insertL*
   (lambda (new old l)
     (cond
-     ((null? l) (quote()))
+     ((null? l) (quote ()))
      ((atom? (car l))
       (cond
        ((eq? (car l) old)
