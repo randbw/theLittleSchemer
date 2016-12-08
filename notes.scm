@@ -957,3 +957,10 @@
   (insert-g
    (lambda (new old l)
      (cons new (cons old l)))))
+
+(define seq-sub
+  (lambda (new old l)
+    (cons new l)))
+
+;; subst with insert-g
+(define subst (insert-g seq-sub))
