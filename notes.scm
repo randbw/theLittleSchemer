@@ -934,7 +934,7 @@
       (lambda (new old l)
 	(cond
 	 ((null? l) (quote ()))
-	 ((test? old (car l)) (seq (new old (cdr l))))
+	 ((test? old (car l)) (seq new old (cdr l)))
 	 (else
 	  (cons (car l)
 		(((insert-g seq) test?) new old (cdr l)))))))))
