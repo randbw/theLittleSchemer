@@ -892,3 +892,29 @@
        (else
 	(cons (car l)
 	      ((rember-f test?) a (cdr l))))))))
+
+;; how to rename (rember-f test?) where test? is eq?
+(define test? (eq?))
+(define rember-eq? (rember-f test?))
+
+(define insertL-f
+  (lambda (test?)
+    (lambda (new old l)
+      (cond
+       ((null? l) (quote ()))
+       ((test? old (car l))
+	(cons new (cons old (cdr l))))
+       (else
+	(cons (car l)
+	      ((insertL-f test?) new old (cdr l))))))))
+
+(define insertR-f
+  (lambda (test?)
+    (lambda (new old l)
+      (cond
+       ((null? l) (quote ()))
+       ((test? old (car l))
+	(cons old (cons new (cdr l))))
+       (else
+	(cons (car l)
+	      (cons ((insertR-f test?) new old (cdr l)))))))))
