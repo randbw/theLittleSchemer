@@ -918,3 +918,42 @@
        (else
 	(cons (car l)
 	      (cons ((insertR-f test?) new old (cdr l)))))))))
+
+(define seqL
+  (lambda (new old l)
+    (cons new (cons old l))))
+
+(define seqR
+  (lambda (new old l)
+    (cons old (cons new l))))
+
+;; went too far. only supposed to do insertX not insertX-f
+(define insert-g
+  (lambda (seq)
+    (lambda (test?)
+      (lambda (new old l)
+	(cond
+	 ((null? l) (quote ()))
+	 ((test? old (car l)) (seq (new old (cdr l))))
+	 (else
+	  (cons (car l)
+		(((insert-g seq) test?) new old (cdr l)))))))))
+
+(define insert-g
+  (lambda (seq)
+    (lambda (new old l)
+      (cond
+       ((null? l) (quote ()))
+       ((eq? old (car l)) (seq new old (cdr l)))
+       (else
+	(cons (car l)
+	      ((insert-g seq) new old (cdr l))))))))
+
+(define insertL (insert-g seqL))
+(define insertR (insert-g seqR))
+
+;; define insertL without defining seqL
+(define insertL
+  (insert-g
+   (lambda (new old l)
+     (cons new (cons old l)))))
