@@ -982,3 +982,70 @@
        (value (1st-sub-exp nexp))
        (value (2nd-sub-exp nexp)))))))
 
+(define multirember-f
+  (lambda (test?)
+    (lambda (a lat)
+      (cond
+       ((null? lat) (quote ()))
+       ((test? a (car lat)) ((multirember-f test?) a (cdr lat)))
+       (else
+	(cons (car lat)
+	      ((multirember-f test?) a (cdr lat))))))))
+
+(define multirember-eq?
+  (multirember-f eq?))
+
+(define test?
+  (lambda (x)
+    (eq? tuna x)))
+
+(define multiremberT
+  (lambda (test? lat)
+    (cond
+     ((null? lat) (quote ()))
+     ((test? (car lat)) (multiremberT test? (cdr lat)))
+     (else
+      (cons (car lat)
+	    (multiremberT test? (cdr lat)))))))
+
+(define new-friend
+  (lambda (newlat seen)
+    (a-friend newlat
+	      (cons (quote tuna) seen))))
+
+(define multiinsertLR
+  (lambda (new oldL oldR lat)
+    (cond
+     ((null? lat) (quote ()))
+     ((eq? (car lat) oldL)
+      (cons new
+	    (cons oldL
+		  (multiinsertLR new oldL oldR (cdr lat)))))
+     ((eq? (car lat) oldR)
+      (cons oldR
+	    (cons new
+		  (multiinsertLR new oldL oldR (cdr lat)))))
+     (else
+      (cons (car lat)
+	    (multiinsertLR new oldL oldR (cdr lat)))))))
+
+(define multiinsertLR&co
+  (lambda (new oldL oldR lat col)
+    (cond
+     ((null? lat)
+      (col (quote ()) 0 0))
+     ((eq? (car lat) oldL)
+      (multiinsertLR&co new oldL oldR (cdr lat)
+			(lambda (newlat L R)
+			  (col (cons new (cons oldL newlat))
+			       (add1 L) R))))
+     ((eq? (car lat) oldR)
+      (multiinsertLR&co new oldL oldR (cdr lat)
+			(lambda (newlat L R)
+			  (col (cons oldR (cons new newlat))
+			       L (add1 R)))))
+     (else
+      (multiinsertLR&co new oldL oldR (cdr lat)
+			(lambda (newlat L R)
+			  (col (cons (car lat)
+				     newlat) L R)))))))
