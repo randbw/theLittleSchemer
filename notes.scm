@@ -1049,3 +1049,22 @@
 			(lambda (newlat L R)
 			  (col (cons (car lat)
 				     newlat) L R)))))))
+
+(define even?
+  (lambda (n)
+    (= (* (/ n 2) 2) n)))
+
+(define evens-only*
+  (lambda (lat)
+    (cond
+     ((null? lat) (quote ()))
+     ((atom? (car lat))
+      (cond
+       ((even? (car lat))
+	(cons (car lat)
+	      (evens-only* (cdr lat))))
+       (else
+	(evens-only* (cdr lat)))))
+     (else
+      (cons (evens-only* (car lat))
+	    (evens-only* (cdr lat)))))))
