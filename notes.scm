@@ -1093,3 +1093,35 @@
 
 
 
+;; Chapter 9 - ... and Again, and Again, and Again, ...
+(define looking
+  (lambda (a lat)
+    (keep-looking a (pick 1 lat) lat)))
+
+(define keep-looking
+  (lambda (a b lat)
+    (cond
+     ((eq? a b) #t)
+     ((number? b)
+      (keep-looking a (pick b lat) lat))
+     (else #f))))
+
+;; TLS has written this as...
+(define keep-looking-tls
+  (lambda (a sorn lat)
+    (cond
+     ((number? sorn)
+      (keep-looking-tls a (pick sorn lat) lat))
+     (else
+      (eq? a sorn)))))
+
+;; "sorn" means symbol or number.
+;; The above method is considered "unnatural" recursion as it does not recur on -
+;; a part of lat
+;; This type of function is called a "partial" function
+;; The other functions we've dealt with up to now are called "total" functions
+
+;; a never ending function
+(define eternity
+  (lambda (x)
+    (eternity x)))
