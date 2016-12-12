@@ -1068,3 +1068,28 @@
      (else
       (cons (evens-only* (car lat))
 	    (evens-only* (cdr lat)))))))
+
+;; col collects evens & has product of evens and sum of odd
+(define evens-only*&co
+  (lambda (l col)
+    (cond
+     ((null? l)
+      (col (quote ()) 1 0))
+     ((atom? (car l))
+      (cond
+       ((even? (car l))
+	(evens-only*&co (cdr l)
+		     (lambda (newlat prod sum)
+		       (col (cons (car l) newlat) (* prod (car l)) sum))))
+       (else
+	(evens-only*&co (cdr l)
+		     (lambda (newlat prod sum)
+		       (col newlat prod (+ sum (car l))))))))
+     (else
+      (cons (evens-only*&co (car l) (lambda (newlat prod sum)
+				   (col newlat prod sum)))
+	    (evens-only*&co (cdr l) (lambda (newlat prod sum)
+				   (col newlat prod sum))))))))
+
+
+
