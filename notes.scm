@@ -1125,3 +1125,202 @@
 (define eternity
   (lambda (x)
     (eternity x)))
+
+(define shift
+  (lambda (pair)
+    (build (first (first pair))
+	   (build (second (first pair))
+		  (second pair)))))
+
+(define align
+  (lambda (pora)
+    (cond
+     ((atom? pora) pora)
+     ((a-pair? (first pora)) (align (shift pora)))
+     (else
+      (build (first pora)
+	     (align (second pora)))))))
+
+(define length*
+  (lambda (pora)
+    (cond
+     ((atom? pora) 1)
+     (else
+      (+ (length* (first pora))
+	 (length* (second pora)))))))
+
+(define weight*
+  (lambda (pora)
+    (cond
+     ((atom? pora) 1)
+     (else
+      (+ (* (weight* (first pora)) 2)
+	 (weight* (second pora)))))))
+
+(define shuffle
+  (lambda (pora)
+    (cond
+     ((atom? pora) pora)
+     ((a-pair? (first pora)) (shuffle (revpair pora)))
+     (else
+      (build (first pora) (shuffle (second pora)))))))
+
+;; (shuffle x) where x is (a (b c))
+;; (build a (shuffle (b c)))
+;; (build a (build b (shuffle c)))
+;; (build a (build b c))
+;; (build a (b c))
+;; (a (b c))
+
+;; (shuffle x) where x is ((a b) (c d))
+;; (shuffle ((c d) (a b)))
+;; goes back and forth on second cond statement
+
+(define C
+  (lambda (n)
+    (cond
+     ((one? n) 1)
+     (else
+      (cond
+       ((even? n) (C (/ n 2)))
+       (else (C (add1 (* 3 n)))))))))
+
+(define A
+  (lambda (n m)
+    (cond
+     ((zero? n) (add1 m))
+     ((zero? m) (A (sub1 n) 1))
+     (else
+      (A (sub1 n) (A n (sub1 m)))))))
+
+;; The Ackermann function
+;; not fun to evaluate
+
+(lambda (l)
+  (cond
+   ((< (length l) 2) (length l))
+   (else
+    (eternity l))))
+
+;; book has below
+(lambda (l)
+  (cond
+   ((null? l) 0)
+   (else (add1 (length0 (cdr l))))))
+
+;; where length0 is as below
+(define length0
+  (lambda (l)
+    (cond
+     ((null? l) 0)
+     (else (add1 (eternity (cdr l)))))))
+
+(lambda (length)
+  (lambda (l)
+    (cond
+     ((null? l) 0)
+     (else
+      (add1 (length (cdr l))))))
+  eternity)
+
+((lambda (f)
+  (lambda (l)
+    (cond
+     ((null? l) 0)
+     (else (add1 (f (cdr l)))))))
+ (lambda (g)
+  (lambda (l)
+    (cond
+     ((null? l) 0)
+     (else (add1 (g (cdr l))))))
+  eternity))
+
+((lambda (f)
+  (lambda (l)
+    (cond
+     ((null? l) 0)
+     (else (add1 (f (cdr l)))))))
+(lambda (g)
+  (lambda (l)
+    (cond
+     ((null? l) 0)
+     (else (add1 (g (cdr l))))))) 
+ (lambda (h)
+  (lambda (l)
+    (cond
+     ((null? l) 0)
+     (else (add1 (h (cdr l))))))
+  eternity))
+
+(define mk-length
+  (lambda (length)
+    (lambda (l)
+      (cond
+       ((null? l) 0)
+       (else
+	(add1 (length (cdr l))))))
+    eternity))
+
+
+((lambda (mk-length)
+   (mk-length mk-length))
+ (lambda (mk-length)
+   (lambda (l)
+     (cond
+      ((null? l) 0)
+      (else (add1
+	     ((mk-length eternity)
+	      (cdr l)))))))
+ l)
+
+
+;; make (mk-length mk-length) a lambda so it does not cause infinite evaluaton
+((lambda (mk-length)
+   (mk-length mk-length))
+ (lambda (mk-length)
+   (lambda (l)
+     (cond
+      ((null? l) 0)
+      (else
+       (add1 (lambda (x) ((mk-length mk-length) x))
+	     (cdr l)))))))
+
+;; extract "length" function
+(lambda (length)
+  (lambda (l)
+    (cond
+     ((null? l) 0)
+     (else
+      (add1 (length (cdr l)))))))
+
+;; insert back into mk-lenth
+((lambda (le)
+   ((lambda (mk-length)
+      (mk-length mk-length))
+    (lambda (mk-length)
+      (le (lambda (x)
+	    ((mk-length mk-length) x))))))
+ (lambda (length)
+   (lambda (l)
+     (cond
+      ((null? l) 0)
+      (else
+       (add1 (length (cdr l))))))))
+
+;; seperate function that makes length from function that looks like length
+(lambda (le)
+  ((lambda (mk-length)
+     (mk-length mk-length))
+   (lambda (mk-length)
+     (le (lambda (x)
+	   ((mk-length mk-length) x))))))
+
+;; this is known as the applicative-order Y combinator
+(define Y
+  (lambda (le)
+    ((lambda (f) (f f))
+     (lambda (f)
+       (le (lambda (x) ((f f) x)))))))
+
+
+;; lol what has just happened.
